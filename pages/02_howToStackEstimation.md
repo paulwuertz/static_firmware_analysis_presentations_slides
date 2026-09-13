@@ -7,7 +7,7 @@ title: Tool comparison
 
 ### Tool comparison
 
-Not one tool to rule it all... <v-click at="5"> yet :) </v-click>
+Not one tool to rule it all... <v-click at="4"> <b> yet - feedback and help welcome :) </b></v-click>
 
 <small>
 
@@ -21,7 +21,7 @@ Not one tool to rule it all... <v-click at="5"> yet :) </v-click>
 | **Stack usage**                 | <v-click at="3"> <b>parsing ASM✨ </b>                                  </v-click>    | <v-click at="3"> GCC .su files    </v-click>     | <v-click at="3"> parsing ASM  </v-click> | <v-click at="3">     -                          </v-click>         |
 | **Call tree construction**      | <v-click at="3"> parsing ASM                                  </v-click>    | <v-click at="3"> parsing ASM <br> <b>GCC .ci files✨ </b><br> <b>dynamic call files ✨ </b> </v-click>  | <v-click at="3"> parsing ASM </v-click>   | <v-click at="3">  -    </v-click>   |
 | **RTOS awarness**               | <v-click at="3"> <b>static thread detection✨ </b>                      </v-click>    | <v-click at="3"> -                 </v-click>    | <v-click at="3"> -             </v-click> | <v-click at="3">  (nothing memory related)    </v-click>     |
-| **Supported architecture**      | <v-click at="4"> ARM / <b>all*✨ </b>                                   </v-click>    | <v-click at="4"> ARM+limited RISCV </v-click>    | <v-click at="4"> all           </v-click> | <v-click at="4"> all                          </v-click>  |
+| **Supported architecture**      | <v-click at="3"> ARM / all*                                   </v-click>    | <v-click at="3"> ARM+limited RISCV <br> -> <b>all*✨ </b></v-click>    | <v-click at="3"> all           </v-click> | <v-click at="3"> all                          </v-click>  |
 
 *only all architectures for memory footprint at the moment
 
@@ -247,6 +247,24 @@ title: 'Getting the call graph'
 * also works for linked library functions
 * architecture dependent - needs to know which instruction(s) call a function and how exactly
 * needs target architectures `objdump` or support in `capstone`
+
+---
+layout: center
+---
+
+![](/livedemo.png)
+
+---
+layout: center
+---
+
+![](/livedemoRED.png)
+
+---
+layout: center
+---
+
+![](/fwOverview.png)
 
 ---
 
