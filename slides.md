@@ -26,7 +26,7 @@ hideInToc: true
 
 <small>
 
-Zephyr in Science and Education Conference - 07-09. October 2026 <br>
+Open Source + Zephyr Developer Summit - 07-09. October 2026 | Prague, Czechia <br>
 
 Paul Würtz, Juan-Felipe Gutiérrez-Gómez
 

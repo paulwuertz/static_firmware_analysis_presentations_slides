@@ -36,9 +36,9 @@ including manually added dynamic calls
 <style>
     .slidev-layout td, .slidev-layout th {
         padding: 0.2rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-}
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+    }
 </style>
 
 <!--
@@ -266,6 +266,95 @@ layout: center
 
 ![](/fwOverview.png)
 
+
+---
+
+```mermaid
+venn-beta
+  title Symbol Difference
+  set NewFeatureBuild["New Feature Build"]
+```
+
+
+---
+
+```mermaid
+venn-beta
+  title Symbol Difference
+  set NewFeatureBuild["New Build"]:20
+  set TargetBranch["Base Branch"]:20
+  union NewFeatureBuild,TargetBranch[""]:10
+```
+
+
+---
+
+```mermaid
+venn-beta
+  title Symbol Difference
+  set NewFeatureBuild["New Build"]:20
+  set TargetBranch["Base Branch"]:20
+  union NewFeatureBuild,TargetBranch["Common Symbols"]:10
+```
+
+---
+
+```mermaid  {  }
+venn-beta
+  title Symbol Difference
+  set NewFeatureBuild["New Build"]:20
+    text x["Added"]
+    text A1["Variables"]
+    text x["Added"]
+    text A1["Functions"]
+  set TargetBranch["Base Branch"]:20
+  union NewFeatureBuild,TargetBranch["Common Symbols"]:10
+  style NewFeatureBuild font-size:12px
+
+```
+
+---
+
+```mermaid
+venn-beta
+  title Symbol Difference
+  set NewFeatureBuild["New Build"]:20
+    text x["Added"]
+    text A1["Variables"]
+    text x["Added"]
+    text A1["Functions"]
+  set TargetBranch["Base Branch"]:20
+    text x["Deleted"]
+    text A1["Variables"]
+    text x["Deleted"]
+    text A1["Functions"]
+  union NewFeatureBuild,TargetBranch["Common Symbols"]:10
+
+```
+
+---
+
+```mermaid
+venn-beta
+  title Symbol Difference
+  set NewFeatureBuild["New Build"]:20
+    text x["Added"]
+    text A1["Variables"]
+    text x["Added"]
+    text A1["Functions"]
+  set TargetBranch["Base Branch"]:20
+    text x["Deleted"]
+    text A1["Variables"]
+    text x["Deleted"]
+    text A1["Functions"]
+  union NewFeatureBuild,TargetBranch["Common Symbols"]:10
+    text AB3["ΔStack"]
+    text AB3["ΔFlash,RAM"]
+    text AB1["Unchanged"]
+    text AB2["Symbols"]
+
+```
+
 ---
 
 * TODO: maybe add a comparision of GCC vs assmbly parsing here :)
@@ -278,3 +367,32 @@ layout: center
 * explain need for amending indirect calls
 * manual amend missing indirect calls
 * zephyr automatic or pre-listing addition of indirect calls
+
+
+bg_thread_main
+    * v1.4 LPC55S16v16 . 816
+    * v1.4 nucleo_h723zg . 808
+    * v1.4 frdm_mcxn947 . 808
+    * v1.4 stm32g0b1xx . 892
+    * v1.4 LPC55S16v16 . 808
+
+gs_usb_tx_thread
+    * v1.4 LPC55S16v16 . 704
+    * v1.4 nucleo_h723zg . 696
+    * v1.4 frdm_mcxn947 . 696
+    * v1.4 stm32g0b1xx . 764
+    * v1.4 LPC55S16v16 . 696
+
+gs_usb_rx_thread
+    * v1.4 LPC55S16v16 . 624
+    * v1.4 nucleo_h723zg . 616
+    * v1.4 frdm_mcxn947 . 616
+    * v1.4 stm32g0b1xx . 668
+    * v1.4 LPC55S16v16 . 616
+
+log_process_thread_func
+    * v1.4 LPC55S16v16 . 312
+    * v1.4 nucleo_h723zg . 312
+    * v1.4 frdm_mcxn947 . 312
+    * v1.4 stm32g0b1xx . 364
+    * v1.4 LPC55S16v16 . 312
