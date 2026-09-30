@@ -1,11 +1,8 @@
-* TODO:
-* how we get to the stack estimation - 20 minutes
-
 ---
-title: Tool comparison
+title: Tool comparison, stack-useage reports and more
 ---
 
-### Tool comparison
+### Tool comparison, stack-useage reports and more
 
 Not one tool to rule it all... <v-click at="4"> <b> yet - feedback and help welcome :) </b></v-click>
 
@@ -19,7 +16,7 @@ Not one tool to rule it all... <v-click at="4"> <b> yet - feedback and help welc
 | **Diff tool**                   | <v-click at="2"> web GUI combined for<br>flash, RAM and stack </v-click>    | <v-click at="2"> -                </v-click>     | <v-click at="2"> -            </v-click> | <v-click at="2"> CLI, separate for ROM and RAM </v-click> |
 | **Firmware scope**              | <v-click at="2"> multiple                                     </v-click>    | <v-click at="2"> single           </v-click>     | <v-click at="2"> single       </v-click> | <v-click at="2"> (multiple with grafana)                                </v-click>     |
 | **Stack usage**                 | <v-click at="3"> <b>parsing ASM✨ </b>                                  </v-click>    | <v-click at="3"> GCC .su files    </v-click>     | <v-click at="3"> parsing ASM  </v-click> | <v-click at="3">     -                          </v-click>         |
-| **Call tree construction**      | <v-click at="3"> parsing ASM                                  </v-click>    | <v-click at="3"> parsing ASM <br> <b>GCC .ci files✨ </b><br> <b>dynamic call files ✨ </b> </v-click>  | <v-click at="3"> parsing ASM </v-click>   | <v-click at="3">  -    </v-click>   |
+| **Call tree construction**      | <v-click at="3"> parsing ASM <br> <b>dynamic calls config ✨ </b>  </v-click>    | <v-click at="3"> parsing ASM <br> <b>GCC .ci files✨ </b><br> <b>dynamic calls config ✨ </b> </v-click>  | <v-click at="3"> parsing ASM </v-click>   | <v-click at="3">  -    </v-click>   |
 | **RTOS awarness**               | <v-click at="3"> <b>static thread detection✨ </b>                      </v-click>    | <v-click at="3"> -                 </v-click>    | <v-click at="3"> -             </v-click> | <v-click at="3">  (nothing memory related)    </v-click>     |
 | **Supported architecture**      | <v-click at="3"> ARM / all*                                   </v-click>    | <v-click at="3"> ARM+limited RISCV <br> -> <b>all*✨ </b></v-click>    | <v-click at="3"> all           </v-click> | <v-click at="3"> all                          </v-click>  |
 
@@ -51,6 +48,21 @@ including manually added dynamic calls
 * but today is all about the stacks :)
 * now we gonna show some of the highlighted topics
 -->
+
+---
+layout: center
+---
+
+# The basics of this kind of firmware analysis
+
+Either
+
+### Evaluating with debug info all stack traces after building the ELF
+
+or
+
+### Construct a calltree with stacksize from GCC output
+
 
 ---
 layout: top-title-two-cols
@@ -98,7 +110,7 @@ fsu.c:10:main 32 dynamic,bounded
 ---
 layout: top-title-two-cols
 color: dark
-title: 'Getting the call graph'
+hideInToc: true
 ---
 
 :: title ::
@@ -138,6 +150,7 @@ foo():
 layout: top-title-two-cols
 color: dark
 title: 'Getting the call graph'
+hideInToc: true
 ---
 
 :: title ::
@@ -147,10 +160,11 @@ title: 'Getting the call graph'
 :: left ::
 
 ```c
-typedef struct { char data [128]; } block_t;
+typedef void (*Callback)();
+typedef struct { char data [128]; Callback cb; } block_t;
 block_t global_block;
 
-void c () { block_t local_blocks [2]; }
+void c () { block_t local_blocks [2]; global_block->cb(); }
 void b (block_t block) { int x; }
 void a (){
     int x;
@@ -166,13 +180,12 @@ void a (){
 graph: { title: "test.c"
 node: { title: "c" label: "c\ntest.c:4:6" }
 node: { title: "__stack_chk_fail"
-    label: "__stack_chk_fail\n<built-in>" shape : ellipse }
-edge: { sourcename: "c" targetname: "__stack_chk_fail" }
+  label: "__stack_chk_fail\n<built-in>" shape : ellipse }
+edge: { sourcename: "c" targetname: "__indirect_call" }
 node: { title: "b" label: "b\ntest.c:5:6" }
 node: { title: "a" label: "a\ntest.c:6:6" }
-edge: { sourcename: "a" targetname: "c" label: "test.c:8:5" }
-edge: { sourcename: "a" targetname: "b" label: "test.c:9:5" }
-}
+edge: { sourcename:"a" targetname:"c" label:"test.c:8:5" }
+edge: { sourcename:"a" targetname:"b" label:"test.c:9:5" }}
 ```
 
 :: right ::
@@ -188,11 +201,10 @@ edge: { sourcename: "a" targetname: "b" label: "test.c:9:5" }
 ```mermaid {theme: 'neutral', scale: 0.5}
 graph TD
 
-subgraph calltree
 A
 A --> B
 A --> C
-end
+C --> ?
 
 ```
 
@@ -200,7 +212,7 @@ end
 ---
 layout: top-title-two-cols
 color: dark
-title: 'Getting the call graph'
+hideInToc: true
 ---
 
 :: title ::
@@ -249,7 +261,60 @@ title: 'Getting the call graph'
 * needs target architectures `objdump` or support in `capstone`
 
 ---
+hideInToc: true
+---
+
+### Wrapping it up
+
+<v-click>
+
+* only working on a debug symbol ELF is most portable
+* using GCC output is platform independent
+
+</v-click>
+
+<table class="tg"><thead>
+  <tr>
+    <th class="tg-0pky"></th>
+    <th class="tg-0pky"></th>
+    <th class="tg-c3ww" colspan="2">Stack use for each function by...</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky">...parsing the assembly instructions.</td>
+    <td class="tg-0pky">...reading GCC .su files.</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky" rowspan="2">Function calls extracted by...</td>
+    <td class="tg-0pky">...parsing the assembly instructions.</td>
+    <td class="tg-c3ow">pexplorer</td>
+    <td class="tg-c3ow">puncover</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">...reading GCC .ci files.</td>
+    <td class="tg-c3ow"></td>
+    <td class="tg-c3ow">(puncover !157) / (pexplorer?)</td>
+  </tr>
+</tbody>
+</table>
+
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top; height: 100px;vertical-align: middle;}
+.tg .tg-c3ww{border-color:inherit;text-align:center;vertical-align:top; }
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top;vertical-align: middle;}
+</style>
+
+---
 layout: center
+title: 'Pexplorer web features'
 ---
 
 ![](/livedemo.png)
@@ -258,29 +323,17 @@ layout: center
 layout: center
 ---
 
-![](/livedemoRED.png)
-
----
-layout: center
----
-
 ![](/fwOverview.png)
 
+---
+
+<img src="/symbolexp.png" width="80%">
 
 ---
 
 ```mermaid
 venn-beta
-  title Symbol Difference
-  set NewFeatureBuild["New Feature Build"]
-```
-
-
----
-
-```mermaid
-venn-beta
-  title Symbol Difference
+  title The diff of two builds
   set NewFeatureBuild["New Build"]:20
   set TargetBranch["Base Branch"]:20
   union NewFeatureBuild,TargetBranch[""]:10
@@ -291,7 +344,7 @@ venn-beta
 
 ```mermaid
 venn-beta
-  title Symbol Difference
+  title The diff of two builds
   set NewFeatureBuild["New Build"]:20
   set TargetBranch["Base Branch"]:20
   union NewFeatureBuild,TargetBranch["Common Symbols"]:10
@@ -301,7 +354,7 @@ venn-beta
 
 ```mermaid  {  }
 venn-beta
-  title Symbol Difference
+  title The diff of two builds
   set NewFeatureBuild["New Build"]:20
     text x["Added"]
     text A1["Variables"]
@@ -317,7 +370,7 @@ venn-beta
 
 ```mermaid
 venn-beta
-  title Symbol Difference
+  title The diff of two builds
   set NewFeatureBuild["New Build"]:20
     text x["Added"]
     text A1["Variables"]
@@ -336,7 +389,7 @@ venn-beta
 
 ```mermaid
 venn-beta
-  title Symbol Difference
+  title The diff of two builds
   set NewFeatureBuild["New Build"]:20
     text x["Added"]
     text A1["Variables"]
@@ -356,6 +409,11 @@ venn-beta
 ```
 
 ---
+
+![](/pexdiff.png)
+
+---
+
 
 * TODO: maybe add a comparision of GCC vs assmbly parsing here :)
 

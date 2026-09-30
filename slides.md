@@ -46,8 +46,18 @@ Slidev template neversink by <a href="https://todd.gureckislab.org" class="ns-c-
 </div>
 
 ---
+hideInToc: true
+---
 
-# TODO intros + motivations
+# Intros + motivations
+
+<v-click>
+
+What we will talk about today:
+
+<Toc />
+
+</v-click>
 
 ---
 src: pages/02_howToStackEstimation.md
@@ -59,4 +69,4 @@ Contents here are ignored
 
 ---
 
-# TODO west + CI - sample applications
+# West + CI - sample applications
