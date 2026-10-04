@@ -49,7 +49,7 @@ Slidev template neversink by <a href="https://todd.gureckislab.org" class="ns-c-
 hideInToc: true
 ---
 
-# Intros + motivations
+# Intro + Motivation
 
 <v-click>
 
@@ -60,13 +60,80 @@ What we will talk about today:
 </v-click>
 
 ---
+title: Build CLI + CI - sample applications
+---
+
+# Build CLI - sample applications - stackcheck OK
+
+![](/stackuseCLI.png)
+
+* similar to `size` after building shows known stack size
+* tries to show limitations of the numbers found
+* warns on found stack overflows
+
+---
+hideInToc: true
+---
+
+# Build CLI - sample applications - stackcheck overflow
+
+<img src="/stackoverflowCLI.png" width="65%">
+
+---
+layout: top-title-two-cols
+color: dark
+hideInToc: true
+---
+
+:: title ::
+
+### Build CI - sample applications - stackdiff of a single board
+
+:: left ::
+
+* proposal for a single board build
+    * [gitlab MR comment](https://gitlab.com/potwal/cannectivity/-/merge_requests/3#note_3895740814) on merge request
+    * pipeline fails on an detected overflow
+    * shows all functions with changed stacksizes
+    * \[no ideas how to give info on changes on the calltree so far - any ideas welcome :)\]
+    * gives more details of each threads worst call path and unresolved functions in it's calltree
+
+![alt text](/gitlab-pipeline.png)
+
+:: right ::
+
+![alt text](/gitlab-stackdiff.png)
+
+
+
+---
+layout: top-title-two-cols
+color: dark
+hideInToc: true
+---
+
+:: title ::
+
+### Build CI - sample applications - stackcheck_boards of an array of boards
+
+:: left ::
+
+* proposal for many targets
+    * [github PR comment](https://github.com/paulwuertz/cannectivity/pull/1#issuecomment-5881633701) on pull requests
+    * example for Release and Debug build comment
+    * pipeline fails on an detected overflow on any board
+    * grouped by each threads stack use for each board - notice the effects drivers and different instructions have on utilization
+
+
+:: right ::
+
+![alt text](/githubPR.png)
+
+
+---
 src: pages/02_howToStackEstimation.md
 ---
 
 <!-- this page will be loaded from './pages/toc.md' -->
 
 Contents here are ignored
-
----
-
-# West + CI - sample applications

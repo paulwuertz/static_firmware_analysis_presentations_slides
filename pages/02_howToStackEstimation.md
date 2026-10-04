@@ -1,24 +1,23 @@
 ---
-title: Tool comparison, stack-useage reports and more
+title: Tool comparison, stack-usage reports and more
 ---
 
-### Tool comparison, stack-useage reports and more
+### Tool comparison, stack-usage reports and more
 
-Not one tool to rule it all... <v-click at="4"> <b> yet - feedback and help welcome :) </b></v-click>
+No tool to rule it all...
 
 <small>
 
-| Feature                         | pexplorer+sELFperf              | puncover             | avstack.pl           | dashboard+<span style="font-size:0.6rem">ROM/RAM</span> report                                                    |
+| Feature                         | pexplorer+sELFperf              | puncover             | avstack.pl           | zephzr dashboard+<span style="font-size:0.6rem">ROM/RAM</span> report                                                    |
 |---------------------------------|---------------------------------|----------------------|----------------------|---------------------------------------------------------------------|
-| **Development**                 | 2025-now                        | 2014-now             | 2013-2015            | 2017-now                      |
+| **Development**                 | 2025-now <br> <small>2000 lines go + 4000 svelte</small>                       | 2014-now  <br> <small>2000 lines python + 500 jinja2</small>            | 2013-2015  <br> <small>200 lines perl</small>           | 2017-now  <br> <small>1500 lines python + 700 jinja2</small>                     |
 | **User interface**              | CLI + static web GUI | CLI + web GUI        | CLI                  |  CLI + web GUI      |
 | **Memory footprint**            | <v-click at="1"> flash and RAM                                </v-click>    | <v-click at="1"> flash and RAM    </v-click>     | <v-click at="1"> -            </v-click> | <v-click at="1"> flash and RAM              </v-click>    |
-| **Diff tool**                   | <v-click at="2"> web GUI combined for<br>flash, RAM and stack </v-click>    | <v-click at="2"> -                </v-click>     | <v-click at="2"> -            </v-click> | <v-click at="2"> CLI, separate for ROM and RAM </v-click> |
 | **Firmware scope**              | <v-click at="2"> multiple                                     </v-click>    | <v-click at="2"> single           </v-click>     | <v-click at="2"> single       </v-click> | <v-click at="2"> (multiple with grafana)                                </v-click>     |
 | **Stack usage**                 | <v-click at="3"> <b>parsing ASM✨ </b>                                  </v-click>    | <v-click at="3"> GCC .su files    </v-click>     | <v-click at="3"> parsing ASM  </v-click> | <v-click at="3">     -                          </v-click>         |
 | **Call tree construction**      | <v-click at="3"> parsing ASM <br> <b>dynamic calls config ✨ </b>  </v-click>    | <v-click at="3"> parsing ASM <br> <b>GCC .ci files✨ </b><br> <b>dynamic calls config ✨ </b> </v-click>  | <v-click at="3"> parsing ASM </v-click>   | <v-click at="3">  -    </v-click>   |
 | **RTOS awarness**               | <v-click at="3"> <b>static thread detection✨ </b>                      </v-click>    | <v-click at="3"> -                 </v-click>    | <v-click at="3"> -             </v-click> | <v-click at="3">  (nothing memory related)    </v-click>     |
-| **Supported architecture**      | <v-click at="3"> ARM / all*                                   </v-click>    | <v-click at="3"> ARM+limited RISCV <br> -> <b>all*✨ </b></v-click>    | <v-click at="3"> all           </v-click> | <v-click at="3"> all                          </v-click>  |
+| **Supported architecture**      | <v-click at="3"> ARM / all*                                   </v-click>    | <v-click at="3"> ARM+limited RISCV <br> -> <b>all✨ ([PR!157](https://github.com/HBehrens/puncover/pull/157)) </b></v-click>    | <v-click at="3"> all           </v-click> | <v-click at="3"> all                          </v-click>  |
 
 *only all architectures for memory footprint at the moment
 
@@ -68,6 +67,7 @@ or
 layout: top-title-two-cols
 color: dark
 title: 'Getting the call graph'
+level: 2
 ---
 
 :: title ::
@@ -110,7 +110,8 @@ fsu.c:10:main 32 dynamic,bounded
 ---
 layout: top-title-two-cols
 color: dark
-hideInToc: true
+title: Getting the stack sizes
+level: 2
 ---
 
 :: title ::
@@ -137,13 +138,14 @@ foo():
 * known instructions increasing the stack (i.e. `push` and `sub sp` on ARM) yields stack size
 * works on only the ELF with debug symbols
 * also works for linked library functions
-* architecture dependent - needs to know which instruction(s) move the stack pointer
 
 
 :: right ::
 
+* architecture dependent - needs to know which instruction(s) move the stack pointer
 * needs target architectures `objdump`
 * ...or is supported in `capstone` (ARM, ARM64 (ARMv8), BPF, Ethereum VM, M68K, M680X, Mips, MOS65XX, PowerPC, RISC-V, SH, Sparc, SystemZ, TMS320C64X, TriCore, Webassembly, XCore and X86 (16, 32, 64).
+* already done in `scripts/checkstack.pl` already for 17 architectures (copy from linux kernel - untouched since 1st zephyr commit  :))
 
 
 ---
@@ -266,12 +268,8 @@ hideInToc: true
 
 ### Wrapping it up
 
-<v-click>
-
-* only working on a debug symbol ELF is most portable
-* using GCC output is platform independent
-
-</v-click>
+* only working on a debug symbol ELF is most portable and compiler independent
+* using GCC output is architecture independent but other compilers miss options
 
 <table class="tg"><thead>
   <tr>
@@ -314,7 +312,7 @@ hideInToc: true
 
 ---
 layout: center
-title: 'Pexplorer web features'
+title: 'pexplorer web features'
 ---
 
 ![](/livedemo.png)
@@ -336,53 +334,7 @@ venn-beta
   title The diff of two builds
   set NewFeatureBuild["New Build"]:20
   set TargetBranch["Base Branch"]:20
-  union NewFeatureBuild,TargetBranch[""]:10
-```
-
-
----
-
-```mermaid
-venn-beta
-  title The diff of two builds
-  set NewFeatureBuild["New Build"]:20
-  set TargetBranch["Base Branch"]:20
   union NewFeatureBuild,TargetBranch["Common Symbols"]:10
-```
-
----
-
-```mermaid  {  }
-venn-beta
-  title The diff of two builds
-  set NewFeatureBuild["New Build"]:20
-    text x["Added"]
-    text A1["Variables"]
-    text x["Added"]
-    text A1["Functions"]
-  set TargetBranch["Base Branch"]:20
-  union NewFeatureBuild,TargetBranch["Common Symbols"]:10
-  style NewFeatureBuild font-size:12px
-
-```
-
----
-
-```mermaid
-venn-beta
-  title The diff of two builds
-  set NewFeatureBuild["New Build"]:20
-    text x["Added"]
-    text A1["Variables"]
-    text x["Added"]
-    text A1["Functions"]
-  set TargetBranch["Base Branch"]:20
-    text x["Deleted"]
-    text A1["Variables"]
-    text x["Deleted"]
-    text A1["Functions"]
-  union NewFeatureBuild,TargetBranch["Common Symbols"]:10
-
 ```
 
 ---
@@ -410,47 +362,46 @@ venn-beta
 
 ---
 
-![](/pexdiff.png)
+<img src="/pexdiff.png" width="80%">
 
 ---
 
+<img src="/pexRTOS.png" width="80%">
 
-* TODO: maybe add a comparision of GCC vs assmbly parsing here :)
+---
 
-* more TODOs:
-* defining threads and stacks manually
-* zephyr ideas for automatic identificacion
-* results in web view
-* results proposal in west
-* explain need for amending indirect calls
-* manual amend missing indirect calls
-* zephyr automatic or pre-listing addition of indirect calls
+<img src="/pexconf.png" width="80%">
 
+---
+layout: center
+hideInToc: true
+---
 
-bg_thread_main
-    * v1.4 LPC55S16v16 . 816
-    * v1.4 nucleo_h723zg . 808
-    * v1.4 frdm_mcxn947 . 808
-    * v1.4 stm32g0b1xx . 892
-    * v1.4 LPC55S16v16 . 808
+### Thank you for your attention!
 
-gs_usb_tx_thread
-    * v1.4 LPC55S16v16 . 704
-    * v1.4 nucleo_h723zg . 696
-    * v1.4 frdm_mcxn947 . 696
-    * v1.4 stm32g0b1xx . 764
-    * v1.4 LPC55S16v16 . 696
+#### Any questions, proposals and feedback welcome :)
 
-gs_usb_rx_thread
-    * v1.4 LPC55S16v16 . 624
-    * v1.4 nucleo_h723zg . 616
-    * v1.4 frdm_mcxn947 . 616
-    * v1.4 stm32g0b1xx . 668
-    * v1.4 LPC55S16v16 . 616
-
-log_process_thread_func
-    * v1.4 LPC55S16v16 . 312
-    * v1.4 nucleo_h723zg . 312
-    * v1.4 frdm_mcxn947 . 312
-    * v1.4 stm32g0b1xx . 364
-    * v1.4 LPC55S16v16 . 312
+<br>
+<div class="flex flex-wrap ">
+  <div class="w-1/3">
+    pexplorer + selfperf
+    <QRCode value="https://paulwuertz.github.io/pexplorer/" :size="150" render-as="svg" />
+  </div>
+  <div class="w-1/10"></div>
+  <div class="w-1/3">
+    puncover-fork
+    <QRCode value="https://github.com/paulwuertz/puncover/" :size="150" render-as="svg" />
+  </div>
+</div>
+<br>
+<div class="flex flex-wrap ">
+  <div class="w-1/3">
+    try pexplorer :)
+    <QRCode value="https://github.com/paulwuertz/pexplorer/" :size="150" render-as="svg" />
+  </div>
+  <div class="w-1/10"></div>
+  <div class="w-1/3">
+    presentation slides
+    <QRCode value="https://paulwuertz.github.io/static_firmware_analysis_presentations_slides/" :size="150" render-as="svg" />
+  </div>
+</div>
