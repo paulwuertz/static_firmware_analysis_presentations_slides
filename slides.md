@@ -72,7 +72,8 @@ title: Build CLI + CI - sample applications
 * warns on found stack overflows
 
 ---
-hideInToc: true
+title: CLI applications sample regular+overflow
+level: 2
 ---
 
 # Build CLI - sample applications - stackcheck overflow
@@ -82,7 +83,8 @@ hideInToc: true
 ---
 layout: top-title-two-cols
 color: dark
-hideInToc: true
+title: gitlab CI single board stack diff
+level: 2
 ---
 
 :: title ::
@@ -109,7 +111,8 @@ hideInToc: true
 ---
 layout: top-title-two-cols
 color: dark
-hideInToc: true
+title: github CI multi board stack check
+level: 2
 ---
 
 :: title ::

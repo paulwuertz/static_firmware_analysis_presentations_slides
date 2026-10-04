@@ -8,7 +8,7 @@ No tool to rule it all...
 
 <small>
 
-| Feature                         | pexplorer+sELFperf              | puncover             | avstack.pl           | zephzr dashboard+<span style="font-size:0.6rem">ROM/RAM</span> report                                                    |
+| Feature                         | pexplorer+sELFperf              | puncover             | avstack.pl           | zephyr dashboard+<span style="font-size:0.6rem">ROM/RAM</span> report                                                    |
 |---------------------------------|---------------------------------|----------------------|----------------------|---------------------------------------------------------------------|
 | **Development**                 | 2025-now <br> <small>2000 lines go + 4000 svelte</small>                       | 2014-now  <br> <small>2000 lines python + 500 jinja2</small>            | 2013-2015  <br> <small>200 lines perl</small>           | 2017-now  <br> <small>1500 lines python + 700 jinja2</small>                     |
 | **User interface**              | CLI + static web GUI | CLI + web GUI        | CLI                  |  CLI + web GUI      |
@@ -138,7 +138,6 @@ foo():
 * known instructions increasing the stack (i.e. `push` and `sub sp` on ARM) yields stack size
 * works on only the ELF with debug symbols
 * also works for linked library functions
-
 
 :: right ::
 
@@ -312,7 +311,7 @@ hideInToc: true
 
 ---
 layout: center
-title: 'pexplorer web features'
+title: 'pexplorer features - footprints, diff, RTOS, config'
 ---
 
 ![](/livedemo.png)
@@ -329,6 +328,9 @@ layout: center
 
 ---
 
+<v-switch>
+  <template #1>
+
 ```mermaid
 venn-beta
   title The diff of two builds
@@ -337,28 +339,33 @@ venn-beta
   union NewFeatureBuild,TargetBranch["Common Symbols"]:10
 ```
 
----
+</template>
+  <template #2>
 
 ```mermaid
 venn-beta
-  title The diff of two builds
-  set NewFeatureBuild["New Build"]:20
+title The diff of two builds
+set NewFeatureBuild["New Build"]:20
     text x["Added"]
     text A1["Variables"]
     text x["Added"]
     text A1["Functions"]
-  set TargetBranch["Base Branch"]:20
+set TargetBranch["Base Branch"]:20
     text x["Deleted"]
     text A1["Variables"]
     text x["Deleted"]
     text A1["Functions"]
-  union NewFeatureBuild,TargetBranch["Common Symbols"]:10
+union NewFeatureBuild,TargetBranch["Common Symbols"]:10
     text AB3["ΔStack"]
     text AB3["ΔFlash,RAM"]
     text AB1["Unchanged"]
     text AB2["Symbols"]
 
 ```
+
+   </template>
+</v-switch>
+
 
 ---
 
@@ -373,35 +380,65 @@ venn-beta
 <img src="/pexconf.png" width="80%">
 
 ---
+title: Outlook
+---
+
+### Outlook - Whats next?
+
+```mermaid
+mindmap
+  root((Whats next?))
+    General Features
+      Flashsize report in CI
+      Semi-Automatic matching of unresolved fns
+      Tested VCG parser for function call extraction
+      CI JSON export to graphana for trends
+      Allow complementing of GCC and Parsed info
+      Support more architectures in parsed info
+    Start Testing
+      Regression test in CI
+      Compare to stacksize measured on HW
+    RTOS
+      Providing common zephyr callback file for subsystems+drivers
+      Support other RTOS detection FreeRTOS, ...
+    Your ideas are welcome 🤓
+
+
+```
+
+---
 layout: center
 hideInToc: true
 ---
 
 ### Thank you for your attention!
 
-#### Any questions, proposals and feedback welcome :)
+#### Any questions, proposals and feedback are very welcome :)
 
 <br>
-<div class="flex flex-wrap ">
+<div class="flex flex-wrap">
   <div class="w-1/3">
-    pexplorer + selfperf
-    <QRCode value="https://paulwuertz.github.io/pexplorer/" :size="150" render-as="svg" />
+    <small>pexplorer+selfperf</small>
+    <QRCode value="https://paulwuertz.github.io/pexplorer/" :size="160" render-as="svg" />
   </div>
-  <div class="w-1/10"></div>
   <div class="w-1/3">
-    puncover-fork
-    <QRCode value="https://github.com/paulwuertz/puncover/" :size="150" render-as="svg" />
+    <small>CI PR/MR comments</small>
+    <QRCode value="https://github.com/CANnectivity/cannectivity/pull/259/changes" :size="160" render-as="svg" />
+  </div>
+  <div class="w-1/3">
+    <small>puncover-fork</small>
+    <QRCode value="https://github.com/paulwuertz/puncover/" :size="160" render-as="svg" />
   </div>
 </div>
 <br>
 <div class="flex flex-wrap ">
+  <div class="w-1/6"></div>
   <div class="w-1/3">
-    try pexplorer :)
-    <QRCode value="https://github.com/paulwuertz/pexplorer/" :size="150" render-as="svg" />
+    <small>try pexplorer :)</small>
+    <QRCode value="https://github.com/paulwuertz/pexplorer/" :size="160" render-as="svg" />
   </div>
-  <div class="w-1/10"></div>
   <div class="w-1/3">
-    presentation slides
-    <QRCode value="https://paulwuertz.github.io/static_firmware_analysis_presentations_slides/" :size="150" render-as="svg" />
+    <small>presentation slides</small>
+    <QRCode value="https://paulwuertz.github.io/static_firmware_analysis_presentations_slides/" :size="160" render-as="svg" />
   </div>
 </div>
