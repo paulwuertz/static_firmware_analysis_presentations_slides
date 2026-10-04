@@ -329,7 +329,7 @@ layout: center
 ---
 
 <v-switch>
-  <template #1>
+  <template #0>
 
 ```mermaid
 venn-beta
@@ -340,7 +340,7 @@ venn-beta
 ```
 
 </template>
-  <template #2>
+  <template #1>
 
 ```mermaid
 venn-beta
