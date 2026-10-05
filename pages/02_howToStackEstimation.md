@@ -14,6 +14,7 @@ No tool to rule it all...
 | **User interface**              | CLI + static web GUI | CLI + web GUI        | CLI                  |  CLI + web GUI      |
 | **Memory footprint**            | <v-click at="1"> flash and RAM                                </v-click>    | <v-click at="1"> flash and RAM    </v-click>     | <v-click at="1"> -            </v-click> | <v-click at="1"> flash and RAM              </v-click>    |
 | **Firmware scope**              | <v-click at="2"> multiple                                     </v-click>    | <v-click at="2"> single           </v-click>     | <v-click at="2"> single       </v-click> | <v-click at="2"> (multiple with grafana)                                </v-click>     |
+| **Analysis scope**              | <v-click at="2"> ELF+DWARF data                                     </v-click>    | <v-click at="2"> ELF data via binutils           </v-click>     | <v-click at="2"> <small>ELF data via binutils</small>       </v-click> | <v-click at="2"> ELF+DWARF data                                </v-click>     |
 | **Stack usage**                 | <v-click at="3"> <b>parsing ASM✨ </b>                                  </v-click>    | <v-click at="3"> GCC .su files    </v-click>     | <v-click at="3"> parsing ASM  </v-click> | <v-click at="3">     -                          </v-click>         |
 | **Call tree construction**      | <v-click at="3"> parsing ASM <br> <b>dynamic calls config ✨ </b>  </v-click>    | <v-click at="3"> parsing ASM <br> <b>GCC .ci files✨ </b><br> <b>dynamic calls config ✨ </b> </v-click>  | <v-click at="3"> parsing ASM </v-click>   | <v-click at="3">  -    </v-click>   |
 | **RTOS awarness**               | <v-click at="3"> <b>static thread detection✨ </b>                      </v-click>    | <v-click at="3"> -                 </v-click>    | <v-click at="3"> -             </v-click> | <v-click at="3">  (nothing memory related)    </v-click>     |
@@ -372,12 +373,122 @@ union NewFeatureBuild,TargetBranch["Common Symbols"]:10
 <img src="/pexdiff.png" width="80%">
 
 ---
+layout: top-title-two-cols
+hideInToc: true
+---
+
+:: title ::
+
+# Reading static zephyr structs
+
+<v-switch>
+<template #0>
 
 <img src="/pexRTOS.png" width="80%">
 
+</template>
+<template #1>
+</template>
+</v-switch>
+
+:: left ::
+
+<img src="/threadsection.png" width="80%">
+
+<v-clicks>
+
+* K_THREAD_DEFINE'd threads are stored in the `_static_thread_data_area` section
+* iterate over all variables, check if it is in the `_static_thread_data_area` section
+* if yes, read the bytes from the ELF
+* map the bytes to the `_static_thread_data` struct
+
+</v-clicks>
+
+
+:: right ::
+
+
+<v-clicks>
+
+<v-switch>
+<template #0>
+
+</template>
+<template #1>
+
+
+```c
+struct _static_thread_data {
+	struct k_thread *init_thread;
+	k_thread_stack_t *init_stack;
+	unsigned int init_stack_size;
+	k_thread_entry_t init_entry;
+	void *init_p1;
+	void *init_p2;
+	void *init_p3;
+	int init_prio;
+	uint32_t init_options;
+	const char *init_name;
+};
+```
+
+
+<v-clicks>
+
+* look-up `init_name`, `init_stack` and `init_entry` to get pointers to the thread entry function, name, ...
+* similar with statically initialized stacks looking for type `z_thread_stack_element`
+
+
+</v-clicks>
+
+</template>
+</v-switch>
+
+</v-clicks>
+
+
+---
+layout: center
+hideInToc: true
 ---
 
+
 <img src="/pexconf.png" width="80%">
+
+---
+layout: top-title-two-cols
+color: dark
+hideInToc: true
+---
+
+:: title ::
+
+### Why are unresolved indirect / dynamic calls distorting the results?
+
+:: left ::
+
+<img src="/usbrx-nodynresolve.png" width="60%">
+
+<v-click at="3">
+
+<img src="/usbrx-1dynresolve.png" width="60%">
+
+</v-click>
+
+:: right ::
+
+<v-clicks>
+
+* 16 functions unresolved...
+* ...add a user provided callback :)
+
+<img src="/add1dynresolve.png" width="100%">
+
+* calltree got completer...
+* ...thread stack size increased
+
+</v-clicks>
+
 
 ---
 title: Outlook
@@ -390,7 +501,7 @@ mindmap
   root((Whats next?))
     General Features
       Flashsize report in CI
-      Semi-Automatic matching of unresolved fns
+      Semi-Automatic matching of unresolved functions
       Tested VCG parser for function call extraction
       CI JSON export to graphana for trends
       Allow complementing of GCC and Parsed info
