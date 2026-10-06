@@ -512,6 +512,7 @@ mindmap
     RTOS
       Providing common zephyr callback file for subsystems+drivers
       Support other RTOS detection FreeRTOS, ...
+      Timing - with a complete calltree... I really want to try to run Heptane, llvm-mca or Titan or anything that estimates function runtime on the firmware!
     Your ideas are welcome 🤓
 
 
