@@ -539,12 +539,12 @@ hideInToc: true
 
 ```md
 * clock_control_driver_api -> mcux_lpc_syscon_api
-	* mcux_lpc_syscon_clock_control_on
-	* mcux_lpc_syscon_clock_control_off
+	* .on -> mcux_lpc_syscon_clock_control_on
+	* .off -> mcux_lpc_syscon_clock_control_off
     * ...
 * gpio_driver_api -> gpio_mcux_lpc_driver_api
-	* gpio_mcux_lpc_port_set_bits_raw
-	* gpio_mcux_lpc_port_set_bits_raw
+	* .port_set_bits_raw -> gpio_mcux_lpc_port_set_bits_raw
+	* .port_toggle_bits -> gpio_mcux_lpc_port_toggle_bits
     * ...
 * ...
 ```
@@ -595,7 +595,7 @@ static inline int z_impl_gpio_port_set_bits_raw(...)
 }
 ```
 
-* ...matching to the API call by name can be done
+* ...matching to the API call by name can be done -> .port_set_bits_raw -> gpio_mcux_lpc_port_set_bits_raw
 * so `led_gpio_set_brightness` calls via inlined function `port_set_bits_raw`, which we saw in the device API implemented in `gpio_mcux_lpc_port_set_bits_raw`
 * it is a draft and a demo :)
 
