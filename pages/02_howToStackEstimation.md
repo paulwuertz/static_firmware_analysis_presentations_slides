@@ -293,7 +293,7 @@ hideInToc: true
   <tr>
     <td class="tg-0pky">...reading GCC .ci files.</td>
     <td class="tg-c3ow"></td>
-    <td class="tg-c3ow">(puncover !157) / (pexplorer?)</td>
+    <td class="tg-c3ow">(puncover !157) / (sELFperf?)</td>
   </tr>
 </tbody>
 </table>

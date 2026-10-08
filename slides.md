@@ -63,7 +63,7 @@ What we will talk about today:
 title: Build CLI + CI - sample applications
 ---
 
-# Build CLI - sample applications - stackcheck OK
+### Build CLI - sample applications - stackcheck OK
 
 ![](/stackuseCLI.png)
 
@@ -76,7 +76,7 @@ title: CLI applications sample regular+overflow
 level: 2
 ---
 
-# Build CLI - sample applications - stackcheck overflow
+### Build CLI - sample applications - stackcheck overflow
 
 <img src="/stackoverflowCLI.png" width="65%">
 
