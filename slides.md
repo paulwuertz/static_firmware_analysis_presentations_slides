@@ -46,18 +46,34 @@ Slidev template neversink by <a href="https://todd.gureckislab.org" class="ns-c-
 </div>
 
 ---
+layout: top-title-two-cols
+color: dark
 hideInToc: true
 ---
 
+:: title ::
+
 # Intro + Motivation
 
-<v-click>
+:: left ::
 
 What we will talk about today:
 
 <Toc />
 
-</v-click>
+:: right ::
+
+* Explore more analysis inspired by puncover...
+
+> pip3 install --user puncover
+>
+> west build -t puncover
+
+
+> https://docs.zephyrproject.org/latest/develop/optimizations/tools.html#build-target-puncover
+
+* ...applying concepts of zephyr to the analysis...
+* ...automatically exporting key results for cheaper, faster and broader feedback.
 
 ---
 title: Build CLI + CI - sample applications
@@ -83,7 +99,7 @@ level: 2
 ---
 layout: top-title-two-cols
 color: dark
-title: gitlab CI single board stack diff
+title: gitlab + github CI - stack diff / check
 level: 2
 ---
 
@@ -111,6 +127,7 @@ level: 2
 ---
 layout: top-title-two-cols
 color: dark
+hideInToc: true
 title: github CI multi board stack check
 level: 2
 ---

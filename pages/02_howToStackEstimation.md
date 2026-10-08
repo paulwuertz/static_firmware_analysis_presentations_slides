@@ -1,8 +1,8 @@
 ---
-title: Tool comparison, stack-usage reports and more
+title: Open tool comparison
 ---
 
-### Tool comparison, stack-usage reports and more
+### Open tool comparison and more
 
 No tool to rule it all...
 
