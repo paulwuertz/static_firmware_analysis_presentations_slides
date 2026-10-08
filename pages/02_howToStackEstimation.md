@@ -519,6 +519,89 @@ mindmap
 ```
 
 ---
+layout: top-title-two-cols
+color: dark
+hideInToc: true
+---
+
+:: title ::
+
+### Experimenting mapping device driver APIs automatically
+
+:: left ::
+
+<v-clicks>
+
+![](/devicearea.png)
+
+* iterate over the `device` structs in the `device_area`
+* list API calls filled that are not `null`
+
+```md
+* clock_control_driver_api -> mcux_lpc_syscon_api
+	* mcux_lpc_syscon_clock_control_on
+	* mcux_lpc_syscon_clock_control_off
+    * ...
+* gpio_driver_api -> gpio_mcux_lpc_driver_api
+	* gpio_mcux_lpc_port_set_bits_raw
+	* gpio_mcux_lpc_port_set_bits_raw
+    * ...
+* ...
+```
+
+
+</v-clicks>
+
+:: right ::
+
+<v-clicks>
+
+* example in CANectivity NXP lpcxpresso 14 devices containing 125 API are found
+* there are at least 177 dynamic calls found in the same firmware
+* most dynamic calls seem to come from device driver APIs
+* how to find the functions using them?
+
+</v-clicks>
+
+---
+hideInToc: true
+---
+
+### Experimenting mapping device driver APIs automatically
+
+<small>
+Callgraph .su file
+</small>
+
+<v-clicks>
+
+```json
+graph: {
+    title: "/zephyr/drivers/led/led_gpio.c"
+    edge: {
+        sourcename: "/zephyr/drivers/led/led_gpio.c:led_gpio_set_brightness"
+        targetname: "__indirect_call"
+        label: "/zephyr/include/zephyr/drivers/gpio.h:1419:8"
+    } ...
+}
+```
+
+* looking at the source line...
+
+```c
+static inline int z_impl_gpio_port_set_bits_raw(...)
+{   ...
+	ret = api->port_set_bits_raw(port, pins);
+}
+```
+
+* ...matching to the API call by name can be done
+* so `led_gpio_set_brightness` calls via inlined function `port_set_bits_raw`, which we saw in the device API implemented in `gpio_mcux_lpc_port_set_bits_raw`
+* it is a draft and a demo :)
+
+</v-clicks>
+
+---
 layout: center
 hideInToc: true
 ---
