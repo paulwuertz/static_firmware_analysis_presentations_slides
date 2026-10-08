@@ -627,7 +627,10 @@ hideInToc: true
 </div>
 <br>
 <div class="flex flex-wrap ">
-  <div class="w-1/6"></div>
+  <div class="w-1/3">
+    <small>Open RFC for stackanalysis</small>
+    <QRCode value="https://github.com/zephyrproject-rtos/zephyr/issues/112163" :size="160" render-as="svg" />
+  </div>
   <div class="w-1/3">
     <small>try pexplorer :)</small>
     <QRCode value="https://github.com/paulwuertz/pexplorer/" :size="160" render-as="svg" />
